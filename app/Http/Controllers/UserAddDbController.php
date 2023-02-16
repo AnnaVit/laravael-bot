@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\HashCreatedHelper;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Routing\Controller as BaseController;
 
 class UserAddDbController extends BaseController
 {
-    private HachCreatedController $hash;
+    private HashCreatedHelper $hash;
 
-    public function __construct(HachCreatedController $hash)
+    public function __construct(HashCreatedHelper $hash)
     {
         $this->hash = $hash;
     }

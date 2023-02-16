@@ -44,7 +44,7 @@ class TelegramAuth
             return $next($request);
 
         } else {
-            return redirect('/');
+            return redirect('/no_access');
         }
     }
 }

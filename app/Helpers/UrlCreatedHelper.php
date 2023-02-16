@@ -1,10 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Helpers;
 
-use Illuminate\Routing\Controller as BaseController;
-
-class UrlGenerateController extends BaseController
+class UrlCreatedHelper
 {
 
     private string $url;

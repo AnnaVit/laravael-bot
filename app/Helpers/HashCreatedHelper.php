@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Helpers;
 
-use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\Crypt;
 
-class HachCreatedController extends BaseController
+class HashCreatedHelper
 {
     /**
      * Сгенерировать hash для url.

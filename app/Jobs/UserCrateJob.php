@@ -2,8 +2,8 @@
 
 namespace App\Jobs;
 
+use App\Helpers\UrlCreatedHelper;
 use App\Http\Controllers\SendMessageController;
-use App\Http\Controllers\UrlGenerateController;
 use App\Http\Controllers\UserAddDbController;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -41,7 +41,7 @@ class UserCrateJob implements ShouldQueue
     {
         $newUser = $this->addUser->addUserDb($this->data);
 
-        $url = (new UrlGenerateController())->newUrl($newUser->getAttribute('authorization_token'));
+        $url = (new UrlCreatedHelper())->newUrl($newUser->getAttribute('authorization_token'));
 
         (new SendMessageController())->sendTelegramMessage(
             $newUser->getAttribute('id'),
