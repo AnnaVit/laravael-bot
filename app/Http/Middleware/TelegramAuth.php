@@ -31,7 +31,7 @@ class TelegramAuth
             $id = $request->session()->get('user');
             $user = $this->user->findUserById($id);
 
-            if(!$user) {
+            if($user->isEmpty()) {
                 return redirect('/no_access');
             }
 
@@ -40,7 +40,6 @@ class TelegramAuth
             if ($tokenExpire < Carbon::now()->timestamp) {
                 return redirect('/no_access');
             }
-
             return $next($request);
 
         } else {

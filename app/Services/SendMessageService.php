@@ -1,39 +1,40 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Services;
 
 use Illuminate\Http\JsonResponse;
-use Illuminate\Routing\Controller as BaseController;
 use RuntimeException;
+use App\Helpers\ResponseHelper;
 
-class SendMessageController extends BaseController
+class SendMessageService
 {
     private string $token;
     private string $parseMode;
     private bool $disableWebPagePreview;
     private bool $disableNotification;
     private const BOT_API = 'https://api.telegram.org/bot';
+    private ResponseHelper $responseHelper;
 
     public function __construct(
+        ResponseHelper $responseHelper,
         string $parseMode = 'HTML',
         bool $disableWebPagePreview = true,
         bool $disableNotification = false
     )
     {
+        $this->responseHelper = $responseHelper;
         $this->token = config('app.token');
         $this->parseMode = $parseMode;
         $this->disableWebPagePreview = $disableWebPagePreview;
         $this->disableNotification = $disableNotification;
-
     }
 
     /**
-     * Отправить сообщение в телеграм.
+     * Отправить сообщение в telegram.
      * @param int $chatId
      * @param string $message
      * @return JsonResponse
      */
-
     public function sendTelegramMessage(int $chatId, string $message): JsonResponse
     {
         $ch = curl_init();
@@ -47,8 +48,8 @@ class SendMessageController extends BaseController
             'chat_id' => $chatId,
             'parse_mode' => $this->parseMode,
             'disable_web_page_preview' => $this->disableWebPagePreview,
-            'disable_notification' => $this->disableNotification
-            ]));
+            'disable_notification' => $this->disableNotification,
+        ]));
 
         $result = curl_exec($ch);
         $result = json_decode($result, true);
@@ -57,7 +58,6 @@ class SendMessageController extends BaseController
             throw new RuntimeException('Telegram API error. Description: ' . $result['description']);
         }
 
-        $data = (object) [];
-        return response()->json($data, 200, [], JSON_FORCE_OBJECT);
+        return $this->responseHelper->emptyResponse();
     }
 }

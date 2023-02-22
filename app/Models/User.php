@@ -2,13 +2,12 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Database\Eloquent\Collection;
 
-class User extends Authenticatable
+class User extends BaseModel
 {
     use HasApiTokens, HasFactory, Notifiable;
 
@@ -26,44 +25,15 @@ class User extends Authenticatable
         'authorization_token_expire',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
-    /*protected $hidden = [
-        'hash'
-    ];*/
-
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
-    /*э
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-    ];*/
-
-    public function findUserByHash(string $authorization_token)
+    public function findUserByAuthorizationToken(string $authorizationToken): Collection|array
     {
-        return $this::query()
-            ->where('authorization_token', '=', $authorization_token)
-            ->limit(1)
-            ->get();
-
-        //todo проставить лимит, переделать запрос
-        //return $this::where('authorization_token', '=', $authorization_token)->get();
+        $where = 'authorization_token';
+        return $this->findBy($where, $authorizationToken);
     }
 
-    public function findUserById(string $id)
+    public function findUserById(string $id): Collection|array
     {
-        return $this::query()
-            ->where('id', '=', $id)
-            ->limit(1)
-            ->get();
-
-        //todo проставить лимит, переделать запрос
-        //return $this::where('authorization_token', '=', $authorization_token)->get();
+        $where = 'id';
+        return $this->findBy($where, $id);
     }
 }

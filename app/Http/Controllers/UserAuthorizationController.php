@@ -22,15 +22,13 @@ class UserAuthorizationController extends BaseController
 
     public function authorizeUser(Request $request, string $authorization_token)
     {
-        $user = $this->user->findUserByHash($authorization_token);
+        $user = $this->user->findUserByAuthorizationToken($authorization_token);
 
-        if(!$user) {
+        if($user->isEmpty()) {
             return;
         }
 
         $request->session()->put('user', $user->value('id'));
-
         return redirect('/');
-
     }
 }

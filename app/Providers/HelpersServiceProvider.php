@@ -15,6 +15,7 @@ class HelpersServiceProvider extends ServiceProvider
     {
         require_once app_path() . '/Helpers/HashCreatedHelper.php';
         require_once app_path() . '/Helpers/UrlCreatedHelper.php';
+        require_once app_path() . '/Helpers/ResponseHelper.php';
 
     }
 
