@@ -48,15 +48,18 @@ class UserCreatedController extends BaseController
 
     public function newUser(Request $request): JsonResponse
     {
-        $data = $this->userValidate->telegramUserValidate($request);
+        $message = $request->input('message.text');
 
-        UserCreateJob::dispatch(
-            $data,
-            $this->urlCreated,
-            $this->sendMessageService,
-            $this->userService
-        );
+        if ($message === '/start') {
+            $data = $this->userValidate->telegramUserValidate($request);
 
+            UserCreateJob::dispatch(
+                $data,
+                $this->urlCreated,
+                $this->sendMessageService,
+                $this->userService
+            );
+        }
         return $this->emptyResponse->emptyResponse();
     }
 }

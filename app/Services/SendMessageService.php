@@ -43,12 +43,30 @@ class SendMessageService
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
 
+//todo вынести кнопку отдельно
+
+        $authorizationButton = json_encode([
+            'inline_keyboard' =>
+                [
+                    [
+                        [
+                            'text' => 'Авторизоваться',
+                            'url' => $message,
+                        ],
+                    ]
+                ],
+                'one_time_keyboard' => true
+        ], JSON_PRETTY_PRINT);
+
+//todo вынести текст сообщения отдельно
+
         curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query([
-            'text' => $message,
+            'text' => 'Для временной авторизации перейдите по ссылке',
             'chat_id' => $chatId,
             'parse_mode' => $this->parseMode,
             'disable_web_page_preview' => $this->disableWebPagePreview,
             'disable_notification' => $this->disableNotification,
+            'reply_markup' => $authorizationButton,
         ]));
 
         $result = curl_exec($ch);
