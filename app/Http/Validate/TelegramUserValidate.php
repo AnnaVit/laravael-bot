@@ -6,7 +6,13 @@ use Illuminate\Routing\Controller as BaseController;
 
 class TelegramUserValidate extends BaseController
 {
-    public function telegramUserValidate($data)
+    /**
+     * Валидация сообщений отправленных пользователем в бот в виде текста
+     * @param $data
+     * @return mixed
+     */
+
+    public function telegramUserValidate($data): mixed
     {
         return $data->validate([
             'update_id' => ['required', 'integer'],
@@ -30,5 +36,19 @@ class TelegramUserValidate extends BaseController
                 'text' => ['required', 'string'],
             ],
         ]);
+    }
+
+    /**
+     * Валидация callback отправленных от бота
+     * @param $data
+     * @return mixed
+     */
+
+    public function callbackValidate($data): mixed
+    {
+        return $data->validate([
+            'update_id' => ['required', 'integer'],
+            'callback_query' => ['required'],
+            ]);
     }
 }

@@ -11,7 +11,7 @@ class HashCreatedHelper
      * @param int $id
      * @return string
      */
-    public function hachCreate(int $id): string
+    public function hashCreate(int $id): string
     {
         return Crypt::encryptString($id);
     }

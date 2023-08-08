@@ -15,7 +15,7 @@ class UserCreateJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    private $data;
+    private array $data;
     private UrlCreatedHelper $urlCreated;
     private SendMessageService $sendMessageService;
     private UserService $userService;
@@ -26,7 +26,7 @@ class UserCreateJob implements ShouldQueue
      * @return void
      */
     public function __construct(
-        $data,
+        array $data,
         UrlCreatedHelper $urlCreated,
         SendMessageService $sendMessageService,
         UserService $userService,
@@ -41,20 +41,30 @@ class UserCreateJob implements ShouldQueue
     /**
      * Execute the job.
      *
-     * @return void
+     * @return string
      */
-    public function handle()
+    public function handle(): string
     {
-        if (array_key_exists('message', $this->data)) {
-            $newUser = $this->userService->createUserFromTelegram($this->data['message']['from']);
-
-            $url = $this->urlCreated->newUrl($newUser->getAttribute('authorization_token'));
-
-            $this->sendMessageService->sendTelegramMessage(
-                $newUser->getAttribute('id'),
-                $url
-            );
+        if (array_key_exists('message', $this->data) &&
+            $this->data['message']['text'] === '/start'
+        ) {
+            $data =$this->data['message']['from'];
+        } elseif (array_key_exists('callback_query', $this->data) &&
+            $this->data['callback_query']['data'] === '/start'
+        ) {
+            $data = $this->data['callback_query']['message']['chat'];
+        } else {
+            $this->sendMessageService->sendMessageWithButton($this->data['message']['chat']['id']);
+            return;
         }
+
+        $newUser = $this->userService->createUserFromTelegram($data);
+
+        $url = $this->urlCreated->newUrl($newUser->getAttribute('authorization_token'));
+
+        $this->sendMessageService->sendAuthorizationMessage(
+            $newUser->getAttribute('id'),
+            $url
+        );
     }
 }
-

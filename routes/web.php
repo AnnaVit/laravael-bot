@@ -15,8 +15,6 @@ use App\Http\Controllers\UserCreatedController;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::get('/test', [Controller::class, 'test'])
-    ->name('test');
 Route::get('/', [Controller::class, 'index'])
     ->name('index')
     ->middleware('telegramAuth');

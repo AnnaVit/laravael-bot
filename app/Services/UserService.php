@@ -28,7 +28,9 @@ class UserService
             $fields[$value] = $data[$value];
         }
 
-        $fields['authorization_token'] = $this->hash->hachCreate($data['id']);
+        //todo перенести при открытии ссылки
+
+        $fields['authorization_token'] = $this->hash->hashCreate($data['id']);
         $fields['authorization_token_expire'] = Carbon::now()->addMinutes(24);
 
         return User::create($fields);
